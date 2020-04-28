@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>movie-search</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+    <!-- Link Swiper's CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/css/swiper.min.css">    
+</head>
+<body>
+    <header id="header" class="header">
+        <h1 class="logo">MovieSearch</h1>
+
+    </header>
+    <main>
+        <form class="search" action="">
+            <input class="search-input" id="search" type="text" placeholder="Search movie" autofocus="">
+            <input class="button-search" id="button-search" type="button" value="Search">
+        </form>
+        <div class="container-slider">
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+                  <div class="swiper-slide">Slide 1</div>
+                  <div class="swiper-slide">Slide 2</div>
+                  <div class="swiper-slide">Slide 3</div>
+                  <div class="swiper-slide">Slide 4</div>
+                  <div class="swiper-slide">Slide 5</div>
+                  <div class="swiper-slide">Slide 6</div>
+                  <div class="swiper-slide">Slide 7</div>
+                  <div class="swiper-slide">Slide 8</div>
+                  <div class="swiper-slide">Slide 9</div>
+                  <div class="swiper-slide">Slide 10</div>
+                </div>
+                <div class="swiper-pagination"></div>
+              </div>
+            
+             
+
+        </div>
+    </main>
+    <footer class="footer">
+        <div class="footer-wrapper">
+             <a href="https://rs.school/" class="rss">RS School 2020q1</a>
+             <a href="https://github.com/cup0ra" class="github">cup0ra</a>
+         </div>
+    </footer>
+     <!-- Swiper JS -->
+     <script src="https://unpkg.com/swiper/js/swiper.min.js"></script>
+            
+     <!-- Initialize Swiper -->
+     <script>
+         var swiper = new Swiper('.swiper-container', {
+      slidesPerView: 4,
+      spaceBetween: 30,
+      loop: true,
+      centeredSlides: false,
+      pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
+      },
+    });
+     </script>
+</body>
+</html>
