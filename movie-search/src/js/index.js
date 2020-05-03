@@ -1,19 +1,87 @@
+import { getResults, getTranslate } from  './moduleAPI.js';
 import '../css/style.css';
 import '../css/style.scss';
 
+const swiper = require('./swiper.js');
 
-document.getElementById('button-search').addEventListener('click',() => {
-  const val = document.getElementById('search').value;
-  console.log(val)
-  getMovieTitle(val)
-});
+const FORM = document.querySelector('FORM');
+const INPUT = document.getElementById('search');
+const ERROR_CONTAINER = document.querySelector('.errors');
+const CLEAR_INPUT = document.getElementById('clear');
+const LOUDER = document.getElementById('loader');
+const HIDDEN = document.querySelector('.hidden')
+let page = 1;
+let searchTerm = 'dream';
 
-function getMovieTitle(page) {
-  const url = `http://www.omdbapi.com/?s=${page}&apikey=ecbff49a`;
- 
-  return fetch(url)
-    .then(res => res.json())
-    .then(data => {
-      console.log(data)
-    });
+
+const mySwiper = document.querySelector('.swiper-container').swiper;
+const swiperWrapper = document.querySelector('.swiper-wrapper')
+
+function getMovieSlide(movie) {
+  const poster = movie.Poster === 'N/A' ? movie.Poster = '../img/template.png' : movie.Poster;
+  return `
+  <div class="swiper-slide">
+  <div class="card-body">
+  <div class='card-title'><a href="https://www.imdb.com/title/${movie.imdbID}" class="" target="_blank">${movie.Title}</a></div>
+    <img class="card-img" src="${poster}" alt="${movie.Title}">
+      <p class="card-text">${movie.Year}</p>
+      <span class="rating">${movie.rating}</span>
+    </div>
+  </div>
+  `;
+}
+
+function showError(error) {
+    ERROR_CONTAINER.innerHTML = `${error}`;
  }
+const  showResults = () => {
+   LOUDER.style.display = 'block';
+   HIDDEN.style.display = 'block';
+   getTranslate(searchTerm).then(data =>{
+    const regexp = /[а-яё]/i;
+      if (regexp.test(searchTerm)){
+         ERROR_CONTAINER.innerHTML = `Showing results for ${data}`
+       }
+          searchTerm = data;
+          getResults(searchTerm,page).then(results =>{
+            if (page === 1 && results) swiperWrapper.innerHTML = '';
+            results.map((movie) => {
+              return mySwiper.appendSlide(getMovieSlide(movie));
+            });
+          }).then(()=>{
+            LOUDER.style.display = 'none';
+            HIDDEN.style.display = 'none';
+          }).catch((error) => {
+              showError(error)
+              mySwiper.update();
+            })
+  })
+}
+showResults()
+
+CLEAR_INPUT.addEventListener('click',() =>{
+  INPUT.value = '';
+  INPUT.focus();
+  ERROR_CONTAINER.innerHTML = '';
+  page=1;
+})
+
+FORM.addEventListener('submit',(event) => { 
+  event.preventDefault();
+  ERROR_CONTAINER.innerHTML = '';
+  searchTerm = INPUT.value
+  page = 1;
+  if (searchTerm.length > 0){
+    showResults()
+    mySwiper.update();
+  }
+})
+
+mySwiper.on('reachEnd',() => {  
+  page +=1;
+  showResults()
+})
+
+ document.querySelector('.swiper-button-next').onclick = () => { mySwiper.slideNext() };
+ document.querySelector('.swiper-button-prev').onclick = () => { mySwiper.slidePrev() };
+
