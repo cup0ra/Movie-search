@@ -1,11 +1,14 @@
 
 
  const swiper = new Swiper('.swiper-container', {
-  slidesPerView: 1,
+   centerInsufficientSlides:true,
+  slidesPerView: 4,
   spaceBetween: 0,
   loop: false,
   centeredSlides: false,
   reachEnd:false,
+  mousewheel: true,
+  
   pagination: {
     el: '.swiper-pagination',
     type: 'progressbar',
@@ -27,7 +30,7 @@
       slidesPerView: 4,
       spaceBetween: 0
     }
-  }
+  },
+  
 });
-
 module.export = swiper;

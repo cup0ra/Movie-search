@@ -16,17 +16,18 @@
     <main>
         <form class="search" action="">
             <div class="input-container">
-            <input class="search-input" id="search" type="text" placeholder="Search movie" autofocus="">
+            <input class="search-input" id="search" type="text" x-webkit-speech placeholder="Search movie" autofocus="" autocomplete="off"/>
             <span class="clear" id="clear"></span>
-            <span class="keyboard"></span>
+            <span class="virtual-keyboard"></span>
             <span class="icon-search"></span>
+            <span class="mic"></span>
             </div>  
             <button class="button-search" id="button-search" type="submit" value="Search">Search</button>
         </form>
         <div class="errors"></div>
         <div class="container-slider">
             <div class="swiper-container">
-               <div class="hidden"><div class="loader" id="loader"></div></div> 
+               <div class="hidden-fon"><div class="loader" id="loader"></div></div> 
                 <div class="swiper-wrapper">
                   
                 </div>
