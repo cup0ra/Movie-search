@@ -13,22 +13,30 @@ const LOUDER = document.getElementById('loader');
 const HIDDEN = document.querySelector('.hidden-fon')
 const KEYBOARD = document.querySelector('.virtual-keyboard')
 let page = 1;
-let searchTerm = 'dream';
+let searchTerm = 'sun';
+let isEnd =true;
 creatDom()
 
 
 const mySwiper = document.querySelector('.swiper-container').swiper;
-
 const swiperWrapper = document.querySelector('.swiper-wrapper')
 
-function getMovieSlide(movie) {
- 
-  const poster = movie.Poster === 'N/A' ? movie.Poster = '../img/template.png' : movie.Poster;
+ function getMovieSlide(movie) {
+  const  poster = movie.Poster === 'N/A' ? movie.Poster = '../img/template.png' :  movie.Poster;
   return `
   <div class="swiper-slide">
   <div class="card-body">
   <div class='card-title '><a href="https://www.imdb.com/title/${movie.imdbID}/videogallery" class="" target="_blank">${movie.Title}</a></div>
-    <img class="card-img " src="${poster}" alt="${movie.Title}">
+    <div class="card-img " id = '${movie.imdbID}'>
+    <img  src="${poster}" alt="${movie.Title}">
+    <div class="description block">
+    <p>Country:<span>  ${movie.country}</span></p>
+    <p>Actors:<span>  ${movie.actor}</span></p>
+    <p>Genres:<span>  ${movie.genre}</span></p>
+    <p>Description:<span>  ${movie.plot}</span></p>
+    <p>Time:<span>  ${movie.time}</span></p>
+    </div>
+    </div>
       <p class="card-text">${movie.Year}</p>
       <span class="rating">${movie.rating}</span>
     </div>
@@ -36,10 +44,10 @@ function getMovieSlide(movie) {
   `;
 }
 
-function showError(error) {
+ function showError(error) {
     ERROR_CONTAINER.innerHTML = `${error}`;
  }
-const  showResults = () => {
+function  showResults() {
    LOUDER.style.display = 'block';
    HIDDEN.style.display = 'block';
    getTranslate(searchTerm).then(data =>{
@@ -50,16 +58,14 @@ const  showResults = () => {
        searchTerm = data;
        getResults(searchTerm,page).then(results =>{
           if (page === 1 && results) swiperWrapper.innerHTML = '';
-            results.map((movie) => {
-              return mySwiper.appendSlide(getMovieSlide(movie));
+             results.map((movie) => {
+             return mySwiper.appendSlide(getMovieSlide(movie));
             });
-          }).then( () =>{
-            LOUDER.style.display = 'none';
-            HIDDEN.style.display = 'none';
+          }).then( ()=>{
+              LOUDER.style.display = 'none';
+              HIDDEN.style.display = 'none';
           }).catch((error) => {
               showError(error)
-              console.log(error)
-              mySwiper.update();
               LOUDER.style.display = 'none';
               HIDDEN.style.display = 'none';
             })
@@ -72,10 +78,11 @@ CLEAR_INPUT.addEventListener('click',() =>{
   INPUT.value = '';
   INPUT.focus();
   ERROR_CONTAINER.innerHTML = '';
+  mySwiper.update();
+  
 })
- function searchMovie(event){
+ function searchMovie(){
   document.getElementById('wrapper-keyboard').classList.add('block')
-  event.preventDefault();
   ERROR_CONTAINER.innerHTML = '';
   searchTerm = INPUT.value
   page = 1;
@@ -84,15 +91,18 @@ CLEAR_INPUT.addEventListener('click',() =>{
     mySwiper.update();
   }
 }
-FORM.addEventListener('submit',searchMovie)
+FORM.addEventListener('submit',(event) => {
+  event.preventDefault();
+  searchMovie ()
+})
 
 mySwiper.on('reachEnd',() => {  
+  if ([0, 1].includes(mySwiper.activeIndex)) return;
   page +=1;
   showResults()
 })
 
- document.querySelector('.swiper-button-next').onclick = () => { mySwiper.slideNext() };
- document.querySelector('.swiper-button-prev').onclick = () => { mySwiper.slidePrev() };
+
  
 KEYBOARD.addEventListener('click', () =>{
   document.getElementById('wrapper-keyboard').classList.toggle('block')
@@ -110,10 +120,20 @@ window.SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecogn
       const speechToText = event.results[0][0].transcript;
       INPUT.value = speechToText;
     }
-    recognition.onend = function() {
+    recognition.addEventListener('end',() => {
+      searchMovie()
       document.querySelector('.mic').classList.remove('mic-active')
-    }
+     
+    })
 document.querySelector('.mic').addEventListener('click',() => {
    recognition.start();
    document.querySelector('.mic').classList.add('mic-active')
+})
+document.addEventListener('click', (event) =>{
+  if( event.target.tagName === 'IMG'){
+    event.target.nextElementSibling.classList.toggle('block')
+  }
+  if(event.target.closest('.description')  ){
+    event.target.closest('.description').classList.add('block')
+  }
 })

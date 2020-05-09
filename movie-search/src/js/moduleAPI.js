@@ -9,25 +9,45 @@ export  async function getTranslate(searchTerm){
     data = JSON.parse(data) 
     return  data.text[0]
   }
+ 
+  
 export async function getResults(searchTerm,page) {
-    const url = `https://www.omdbapi.com/?s=${searchTerm}&page=${page}&apikey=ecbff49a`;
-    const response = await fetch(url);
+    const url = `https://www.omdbapi.com/?s=${searchTerm}&page=${page}&apikey=48ad8c04`;
+    const response = await fetch(url,{'Access-Control-Allow-Origin':'*'});
     const data = await response.json();
-    if(data.Error && data.Error !== 'Movie not found!'){
-      throw new Error(data.Error)
+    if(data.Error && data.Error !== 'Movie not found!' && data.Error !== 'Request limit reached!'){
+      throw data.Error
     }
     if (data.Error === 'Movie not found!') {
-        throw  (`No results for ${  searchTerm}`) ;
+      const notFound = `No results for ${ searchTerm}`;
+        throw  notFound;
       }
-    for(const item of data.Search) {
-        const rating = await getRating(item.imdbID);
-        item.rating =  rating.imdbRating;
-      };
+    if( data.Error === 'Request limit reached!'){
+      const limit = "That is all for today! Come back tomorrow"
+     throw limit
+    }
+    
+     const promises = data.Search.map(async(item)=>{
+       console.log(item)
+      const rating = await getRating(item.imdbID);
+      item.rating =  rating.imdbRating;
+      item.plot = rating.Plot;
+      item.genre = rating.Genre;
+      item.actor = rating.Actors;
+      item.country = rating.Country;
+      item.time = rating.Runtime;
+      console.log(rating)
+     })
+     await Promise.all(promises)
+     
+      console.log(data)
     return  data.Search
   }
-export async function getRating(imdbID){
-    const ratingUrl = `https://www.omdbapi.com/?i=${imdbID}&apikey=ecbff49a`;
+
+ 
+  export async function getRating(imdbID){
+    const ratingUrl = `https://www.omdbapi.com/?i=${imdbID}&apikey=48ad8c04`;
     const response = await fetch(ratingUrl);
     const data = await response.json();
-    return data;
+    return data
   }
