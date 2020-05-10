@@ -25,7 +25,6 @@ const mySwiper = document.querySelector('.swiper-container').swiper;
 const swiperWrapper = document.querySelector('.swiper-wrapper')
 
   function getMovieSlide(movie) {
-    const poster = movie.Poster === 'N/A' ? movie.Poster = posterDefault :  movie.Poster;
     const CARD = `
     <div class="swiper-slide">
       <div class="card-body">
@@ -69,7 +68,8 @@ async function  showResults() {
        getResults(searchTerm,page).then(results =>{
           if (page === 1 && results) swiperWrapper.innerHTML = '';
              results.map( async (movie) => {
-               await checkImgSrc(movie.Poster)
+              const poster = movie.Poster === 'N/A' ? movie.Poster = posterDefault :  movie.Poster;
+               await checkImgSrc(poster)
                getMovieSlide(movie)
             })
               LOUDER.style.display = 'none';
