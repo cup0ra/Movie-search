@@ -1,14 +1,12 @@
-
-
  const swiper = new Swiper('.swiper-container', {
    centerInsufficientSlides:true,
   slidesPerView: 4,
   spaceBetween: 0,
   loop: false,
   centeredSlides: false,
-  reachEnd:false,
+  reachEnd:true,
   mousewheel: true,
-  
+  watchOverflow: true,
   pagination: {
     el: '.swiper-pagination',
     type: 'progressbar',

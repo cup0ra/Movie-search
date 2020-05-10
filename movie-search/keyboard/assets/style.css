@@ -1,0 +1,94 @@
+
+#wrapper-keyboard{
+    width: 800px;
+    margin:auto;
+    text-align: center;
+    
+   
+    position:absolute;
+    top:40px;
+    z-index: 100000;
+  }
+  
+  .keyboard{
+    font-family: 'Didact Gothic', sans-serif;
+    width: 730px;
+    height: auto;
+    border: 1px solid 	#808080;
+    border-radius: 5px;
+    display: flex;
+    padding-bottom: 3px;
+    flex-wrap: wrap;
+    background:  rgba(255, 255, 255, 0.87);
+    
+   z-index: 1000;
+  }
+  
+  .key{
+    width: 40px;
+    height: 40px;
+    border: 1px solid	#808080;
+    margin: 3px;
+    border-radius: 7px;
+    line-height: 40px;
+    background:	#F8F8F8;
+    box-shadow:2px 2px 0px 0px rgb(128,128,128,0.75);
+    color:	#696969;
+    color: #CF6679;
+  }
+  .key:hover{
+    
+    cursor: pointer;
+  }
+  
+  .active{
+   background: #E8E8E8;
+   box-shadow: 1px 1px 0px 0px rgb(0,0,0,0.75) ;
+   transform: translate(1px, 1px);
+   transition: all 0.2s ease 0s;
+  }
+  
+  .backspace{
+    width: 115px;
+  }
+  .tab{
+    width: 69px;
+  }
+  .CapsLock,
+  .ShiftLeft{
+    width: 110px;
+  }
+    
+  .Enter,
+  .ShiftRight{
+    width: 93px;
+  }
+  .ControlLeft{
+    width: 80px;
+  }
+  .Meta{
+    width: 50px;
+    font-size: 14px;
+  }
+  .Space{
+    width: 298px;
+  }
+  .hidden{
+    display: none;
+  }
+  .press{
+    background: #E8E8E8;
+    box-shadow: 1px 1px 0px 0px rgb(0,0,0,0.75) ;
+    transform: translate(1px, 1px);
+    transition: all 0.2s ease 0s;
+  }
+  .key-style-upper {
+    text-transform: uppercase; 
+    }
+    .block{
+      display: none;
+    }
+    input::-webkit-input-speech-button {
+      -webkit-appearance: -webkit-input-speech-button;
+      display: inline-block;
+  }
