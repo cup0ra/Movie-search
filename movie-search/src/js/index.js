@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-unused-vars */
 import { getResults, getTranslate } from  './moduleAPI';
 import { creatDom } from  '../../keyboard/keyboard';
 import '../css/style.css';
@@ -17,6 +19,7 @@ const WRAPPER_KEYBOARD = document.getElementById('wrapper-keyboard')
 const MICROPHONE = document.querySelector('.mic')
 let page = 1;
 let searchTerm = 'sun';
+let isMIC = true
 const posterDefault = '../img/template.png';
 creatDom()
 
@@ -24,13 +27,23 @@ creatDom()
 const mySwiper = document.querySelector('.swiper-container').swiper;
 const swiperWrapper = document.querySelector('.swiper-wrapper')
 
-  function getMovieSlide(movie) {
+const checkImgSrc = src => {
+  return  new Promise((resolve) =>{
+  const img = new Image();
+  img.addEventListener("load", () => resolve(img));
+  img.addEventListener("error", () => resolve(posterDefault) );
+  img.src = src;
+  })
+}
+ async function getMovieSlide(movie) {
+  const poster = movie.Poster === 'N/A' ? movie.Poster = posterDefault :  movie.Poster;
+    await checkImgSrc(movie.Poster)
     const CARD = `
     <div class="swiper-slide">
       <div class="card-body">
         <div class='card-title '><a href="https://www.imdb.com/title/${movie.imdbID}/videogallery" class="" target="_blank">${movie.Title}</a></div>
           <div class="card-img " id = '${movie.imdbID}'>
-            <img  src="${movie.Poster}" alt="${movie.Title}">
+            <img  src="${movie.Poster}" onError="this.onerror=null;this.src='../img/template.png';" alt="${movie.Title}">
               <div class="description block">
                 <p>Country:<span>  ${movie.country}</span></p>
                 <p>Actors:<span>  ${movie.actor}</span></p>
@@ -46,13 +59,7 @@ const swiperWrapper = document.querySelector('.swiper-wrapper')
     `;
     return mySwiper.appendSlide(CARD)
 }
-const checkImgSrc = src => {
- return  new Promise((resolve) =>{
-  const img = new Image();
-  img.addEventListener("load", () => resolve(img));
-  img.src = src;
-  }); 
-}
+
 function showError(error) {
   ERROR_CONTAINER.innerHTML = `${error}`;
 }
@@ -67,11 +74,10 @@ async function  showResults() {
        searchTerm = data;
        getResults(searchTerm,page).then(results =>{
           if (page === 1 && results) swiperWrapper.innerHTML = '';
-             results.map( async (movie) => {
-              const poster = movie.Poster === 'N/A' ? movie.Poster = posterDefault :  movie.Poster;
-               await checkImgSrc(poster)
-               getMovieSlide(movie)
+            const promises = results.map( (movie) => {
+           return getMovieSlide(movie)
             })
+              Promise.all(promises)
               LOUDER.style.display = 'none';
               HIDDEN.style.display = 'none';
           }).catch((error) => {
@@ -130,11 +136,15 @@ recognition.onresult = (event) => {
 recognition.addEventListener('end',() => { 
   searchMovie()
   MICROPHONE.classList.remove('mic-active')
+  isMIC = true
 })
 
 MICROPHONE.addEventListener('click',() => {
-  recognition.start();
-  MICROPHONE.classList.add('mic-active')
+  if(isMIC === true){
+    recognition.start();
+    MICROPHONE.classList.add('mic-active')
+    isMIC = false
+  }
 })
 
 document.addEventListener('click', (event) =>{

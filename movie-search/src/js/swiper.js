@@ -1,9 +1,9 @@
+/* eslint-disable no-undef */
  const swiper = new Swiper('.swiper-container', {
    centerInsufficientSlides:true,
   slidesPerView: 4,
   spaceBetween: 0,
   loop: false,
-  centeredSlides: false,
   reachEnd:true,
   mousewheel: true,
   watchOverflow: true,

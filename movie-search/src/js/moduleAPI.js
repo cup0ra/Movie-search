@@ -12,14 +12,14 @@ export  async function getTranslate(searchTerm){
   }
   
   export async function getRating(imdbID){
-    const ratingUrl = `https://www.omdbapi.com/?i=${imdbID}&apikey=62555408`;
+    const ratingUrl = `https://www.omdbapi.com/?i=${imdbID}&apikey=ecbff49a`;
     const response = await fetch(ratingUrl);
     const data = await response.json();
     return data
   }
   
 export async function getResults(searchTerm,page) {
-    const url = `https://www.omdbapi.com/?s=${searchTerm}&page=${page}&apikey=62555408`;
+    const url = `https://www.omdbapi.com/?s=${searchTerm}&page=${page}&apikey=ecbff49a`;
     const response = await fetch(url,{'Access-Control-Allow-Origin':'*'});
     const data = await response.json();
     if(data.Error && data.Error !== 'Movie not found!' && data.Error !== 'Request limit reached!'){
