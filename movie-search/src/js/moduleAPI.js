@@ -4,22 +4,19 @@ export  async function getTranslate(searchTerm){
     &text=${searchTerm}&lang=ru-en`;
     const response = await fetch(url);
     let data = await response.text();
-    if (data.Error) {
-        throw new Error(data.Error);
-      }
     data = JSON.parse(data) 
     return  data.text[0]
   }
   
   export async function getRating(imdbID){
-    const ratingUrl = `https://www.omdbapi.com/?i=${imdbID}&apikey=ecbff49a`;
+    const ratingUrl = `https://www.omdbapi.com/?i=${imdbID}&apikey=48ad8c04`;
     const response = await fetch(ratingUrl);
     const data = await response.json();
     return data
   }
   
 export async function getResults(searchTerm,page) {
-    const url = `https://www.omdbapi.com/?s=${searchTerm}&page=${page}&apikey=ecbff49a`;
+    const url = `https://www.omdbapi.com/?s=${searchTerm}&page=${page}&apikey=48ad8c04`;
     const response = await fetch(url,{'Access-Control-Allow-Origin':'*'});
     const data = await response.json();
     if(data.Error && data.Error !== 'Movie not found!' && data.Error !== 'Request limit reached!'){

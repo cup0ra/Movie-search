@@ -21,7 +21,7 @@ let page = 1;
 let searchTerm = 'sun';
 let isMIC = true
 const posterDefault = '../img/template.png';
-creatDom()
+
 
 
 const mySwiper = document.querySelector('.swiper-container').swiper;
@@ -62,29 +62,36 @@ const checkImgSrc = src => {
 
 function showError(error) {
   ERROR_CONTAINER.innerHTML = `${error}`;
+  LOUDER.style.display = 'none';
+  HIDDEN.style.display = 'none';
+  searchTerm = localStorage.getItem('search')
+  page = +(localStorage.getItem('page'))
 }
 async function  showResults() {
    LOUDER.style.display = 'block';
    HIDDEN.style.display = 'block';
    getTranslate(searchTerm).then(data =>{
-    const regexp = /[а-яё]/i;
-      if (regexp.test(searchTerm)){
+    if (/^\d+$/.test(searchTerm)){ 
+      data = searchTerm
+    }
+      if (/[а-яё]/i.test(searchTerm)){
          ERROR_CONTAINER.innerHTML = `Showing results for ${data}`
        }
-       searchTerm = data;
+       searchTerm = data
        getResults(searchTerm,page).then(results =>{
           if (page === 1 && results) swiperWrapper.innerHTML = '';
-            const promises = results.map( (movie) => {
+           results.map( (movie) => {
            return getMovieSlide(movie)
             })
-              Promise.all(promises)
               LOUDER.style.display = 'none';
               HIDDEN.style.display = 'none';
+              localStorage.setItem('search', searchTerm);
+              localStorage.setItem('page',page)
           }).catch((error) => {
               showError(error)
-              LOUDER.style.display = 'none';
-              HIDDEN.style.display = 'none';
             })
+  }).catch((error) => {
+    showError(error)
   })
 }
 showResults()

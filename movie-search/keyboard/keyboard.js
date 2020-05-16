@@ -5,7 +5,7 @@
 import {RUS,RUS_CAPS,EN,EN_CAPS,CODE} from './assets/data'
 
 
-
+let isCAPS = true;
 export function creatDom(){
 const wrapper = document.createElement('div');
 wrapper.id = 'wrapper-keyboard';
@@ -29,6 +29,7 @@ keyboards.children[13].classList.add('backspace');
 keyboards.children[14].classList.add('tab');
 keyboards.children[28].classList.add('del');
 keyboards.children[29].classList.add('CapsLock');
+keyboards.children[29].id='CapsLock';
 keyboards.children[41].classList.add('Enter');
 keyboards.children[42].classList.add('ShiftLeft');
 keyboards.children[53].classList.add('ArrowUp');
@@ -68,7 +69,13 @@ function caps() {
       en[i].innerText !== 'Shift'&&
       en[i].innerText !== 'Rus/En') {
       en[i].classList.toggle('key-style-upper');
+      if(isCAPS === true){
+        isCAPS = false;
+      }else{
+        isCAPS = true;
+      }
     }
+    
   }
 }
 function shift() {
@@ -94,6 +101,7 @@ document.querySelectorAll(' .key ').forEach((element) => {
       shift();
 
     }
+
   };
 });
 document.querySelectorAll('.key ').forEach((element) => {
@@ -149,7 +157,15 @@ document.querySelectorAll('.key ').forEach((element) => {
       INPUT.setRangeText('\t', INPUT.selectionStart, INPUT.selectionEnd, 'end');
     }
     else if (code === 'Rus/En') {
-      changeLang()
+      if(isCAPS === false){
+        caps()
+        changeLang()
+        document.getElementById('CapsLock').classList.remove('press')
+        isCAPS = true
+      }else{
+        changeLang()
+        isCAPS = true
+      }
     } else if (code === '→') {
       moveRightCaret() 
     }else if (code === '←') {
@@ -159,6 +175,7 @@ document.querySelectorAll('.key ').forEach((element) => {
     }
   };
 });
+
 
 
 
