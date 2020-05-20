@@ -19,7 +19,8 @@ const WRAPPER_KEYBOARD = document.getElementById('wrapper-keyboard')
 const MICROPHONE = document.querySelector('.mic')
 let page = 1;
 let searchTerm = 'sun';
-let isMIC = true
+let isMIC = true;
+let isEND = false;
 const posterDefault = '../img/template.png';
 
 
@@ -67,6 +68,7 @@ function showError(error) {
   searchTerm = localStorage.getItem('search')
   page = +(localStorage.getItem('page'))
 }
+const setTimeoutPromise = ms => new Promise(resolve => setTimeout(resolve, ms))
 async function  showResults() {
    LOUDER.style.display = 'block';
    HIDDEN.style.display = 'block';
@@ -74,22 +76,22 @@ async function  showResults() {
     if (/^\d+$/.test(searchTerm)){ 
       data = searchTerm
     }
-      if (/[а-яё]/i.test(searchTerm)){
-         ERROR_CONTAINER.innerHTML = `Showing results for ${data}`
-       }
-       searchTerm = data
-       getResults(searchTerm,page).then(results =>{
-          if (page === 1 && results) swiperWrapper.innerHTML = '';
-           results.map( (movie) => {
-           return getMovieSlide(movie)
-            })
-              LOUDER.style.display = 'none';
-              HIDDEN.style.display = 'none';
-              localStorage.setItem('search', searchTerm);
-              localStorage.setItem('page',page)
-          }).catch((error) => {
-              showError(error)
-            })
+    if (/[а-яё]/i.test(searchTerm)){
+      ERROR_CONTAINER.innerHTML = `Showing results for ${data}`
+    }
+    searchTerm = data
+    getResults(searchTerm,page).then( results =>{
+      if (page === 1 && results) swiperWrapper.innerHTML = '';
+        results.map( (movie) => {
+       return getMovieSlide(movie)
+        })
+        LOUDER.style.display = 'none';
+        HIDDEN.style.display = 'none';
+        localStorage.setItem('search', searchTerm);
+        localStorage.setItem('page',page)
+    }).catch((error) => {
+      showError(error)
+    })
   }).catch((error) => {
     showError(error)
   })
@@ -103,15 +105,16 @@ CLEAR_INPUT.addEventListener('click',() =>{
   mySwiper.update();
   
 })
- function searchMovie(){
-    WRAPPER_KEYBOARD.classList.add('block')
-    ERROR_CONTAINER.innerHTML = '';
-    searchTerm = INPUT.value
-    page = 1;
-    if (searchTerm.length > 0){
-      showResults()
-      mySwiper.update();
-    }
+function searchMovie(){
+  WRAPPER_KEYBOARD.classList.add('block')
+  ERROR_CONTAINER.innerHTML = '';
+  searchTerm = INPUT.value
+  page = 1;
+  if (searchTerm.length > 0){
+    isEND = false
+    showResults()
+    mySwiper.update();
+  }
 }
 FORM.addEventListener('submit',(event) => {
   event.preventDefault();
@@ -120,8 +123,17 @@ FORM.addEventListener('submit',(event) => {
 
 mySwiper.on('reachEnd',() => {  
   if ([0, 1].includes(mySwiper.activeIndex)) return;
-  page +=1;
-  showResults()
+  if(isEND === true){
+    page +=1;
+    showResults()
+  }
+})
+mySwiper.on('slideChange',() => {  
+  if(mySwiper.touches){
+    isEND = true;
+    console.log(isEND)
+  }
+
 })
 
 KEYBOARD.addEventListener('click', () =>{

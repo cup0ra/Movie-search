@@ -4,6 +4,8 @@
   slidesPerView: 4,
   spaceBetween: 0,
   loop: false,
+  preloadImages:true,
+  updateOnImagesReady:true,
   reachEnd:true,
   mousewheel: true,
   watchOverflow: true,
