@@ -1,4 +1,4 @@
-# Fancy-weather
+# Movie-search
 
 ### [Task description](https://github.com/rolling-scopes-school/tasks/blob/master/tasks/movie-search.md)
 ### [Deploy](https://cup0ra-movie-search.netlify.app)
